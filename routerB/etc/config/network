@@ -1,0 +1,80 @@
+
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config globals 'globals'
+	option ula_prefix 'fd64:5c0d:ebc2::/48'
+
+config interface 'lan'
+	option type 'bridge'
+	option proto 'static'
+	option netmask '255.255.255.0'
+	option gateway '192.168.16.2'
+	option ipaddr '192.168.16.22'
+	list dns '192.168.16.2'
+	option ip6assign '64'
+	option ip6ifaceid 'eui64'
+	option igmp_snooping '1'
+	option ifname 'eth0.1 @trunk.1'
+	option stp '1'
+
+config switch
+	option name 'switch0'
+	option reset '1'
+	option enable_vlan '1'
+
+config switch_vlan
+	option device 'switch0'
+	option vlan '1'
+	option vid '1'
+	option ports '0t 3 4 5'
+
+config switch_vlan
+	option device 'switch0'
+	option vlan '2'
+	option ports '0t 1'
+	option vid '2'
+
+config interface 'cam'
+	option proto 'static'
+	option igmp_snooping '1'
+	option type 'bridge'
+	option netmask '255.255.255.0'
+	option ipaddr '192.168.11.1'
+	option ifname 'eth0.11 @trunk.11'
+
+config switch_vlan
+	option device 'switch0'
+	option vlan '3'
+	option ports '0t 2'
+	option vid '11'
+
+config interface 'gre'
+	option proto 'gretap'
+	option ipaddr '10.99.0.22'
+	option peeraddr '10.99.0.2'
+	option tunlink 'wtun'
+	option network 'trunk'
+	option df '0'
+	option mtu '1500'
+
+config interface 'wtun'
+	option proto 'static'
+	option ipaddr '10.99.0.22'
+	option netmask '255.255.255.0'
+	option delegate '0'
+	option mtu '2048'
+
+config interface 'trunk'
+	option type 'bridge'
+	option proto 'none'
+	option auto '1'
+	option bridge_empty '1'
+	option ifname 'eth0'
+	option delegate '0'
+	option igmp_snooping '1'
+	option stp '1'
+
